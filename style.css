@@ -1,0 +1,438 @@
+/* =====================================================================
+   Gruppo BF, pagina sostenibilità e archivio dei report
+   Foglio di stile unico, senza framework e senza risorse esterne.
+   Organizzazione del file:
+     1. proprietà personalizzate
+     2. azzeramenti e impostazioni di base
+     3. struttura e contenitori
+     4. accessibilità
+     5. testata e navigazione
+     6. apertura
+     7. sezioni di contenuto
+     8. aree di impegno
+     9. indicatori
+    10. archivio dei report
+    11. piede
+    12. adattamento agli schermi
+   ===================================================================== */
+
+/* ---------- 1. Proprietà personalizzate --------------------------------
+   Colori, dimensioni tipografiche e spaziature sono raccolti qui perché
+   una revisione dell'aspetto non debba toccare il resto del foglio. */
+:root {
+  --campo: #2f4a32;          /* verde profondo, colore dominante */
+  --campo-scuro: #1d2f20;    /* fondo delle sezioni invertite */
+  --terra: #7a4f2c;          /* accento caldo, usato con parsimonia */
+  --carta: #f4f3ef;          /* fondo neutro della pagina */
+  --carta-alta: #ffffff;     /* superfici in rilievo */
+  --inchiostro: #1a1a17;     /* testo corrente */
+  --inchiostro-tenue: #55584f; /* testo secondario */
+  --filo: #d6d4cb;           /* linee di separazione */
+
+  --testo: 1.0625rem;
+  --testo-piccolo: 0.9375rem;
+  --titolo-1: 2.25rem;
+  --titolo-2: 1.5rem;
+  --titolo-3: 1.1875rem;
+  --cifra: 2rem;
+
+  --serif: Georgia, 'Times New Roman', serif;
+  --sans: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  --passo: 1rem;
+  --passo-doppio: 2rem;
+  --passo-sezione: 4rem;
+  --misura: 34rem;           /* larghezza di colonna per il testo corrente */
+}
+
+/* ---------- 2. Azzeramenti e impostazioni di base ---------------------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+body,
+h1, h2, h3, p, ul, ol, li, dl, dt, dd, figure {
+  margin: 0;
+  padding: 0;
+}
+
+ul { list-style: none; }
+
+body {
+  font-family: var(--sans);
+  font-size: var(--testo);
+  line-height: 1.6;
+  color: var(--inchiostro);
+  background-color: var(--carta);
+  /* Migliora la resa dei caratteri sui fondi scuri senza alterare i colori. */
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--serif);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--campo-scuro);
+}
+
+p + p { margin-top: var(--passo); }
+
+sub { font-size: 0.75em; }
+
+/* ---------- 3. Struttura e contenitori --------------------------------- */
+.contenitore {
+  width: 100%;
+  max-width: 64rem;
+  margin-inline: auto;
+  padding-inline: var(--passo-doppio);
+}
+
+/* Applicata ai blocchi di prosa continua per limitare la lunghezza di riga,
+   che è il fattore che incide di più sulla leggibilità. */
+.misura-lettura { max-width: var(--misura); }
+
+/* ---------- 4. Accessibilità ------------------------------------------
+   Il collegamento di salto è tolto dal flusso visivo ma resta nell'albero
+   di accessibilità e rientra in pagina quando riceve il focus. */
+.salta {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background-color: var(--campo-scuro);
+  color: var(--carta-alta);
+  padding: 0.75rem 1.25rem;
+  z-index: 10;
+}
+
+.salta:focus {
+  left: 0;
+}
+
+/* Indicatore di focus sempre visibile e con contrasto sufficiente su
+   entrambi i fondi. Non viene mai rimosso. */
+a:focus-visible,
+.pulsante:focus-visible {
+  outline: 3px solid var(--terra);
+  outline-offset: 3px;
+}
+
+.sezione--scura a:focus-visible {
+  outline-color: #e2c79a;
+}
+
+/* Chi ha dichiarato di preferire un movimento ridotto non riceve
+   transizioni. */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+html { scroll-behavior: smooth; }
+
+/* ---------- 5. Testata e navigazione ----------------------------------- */
+.testata {
+  border-bottom: 1px solid var(--filo);
+  background-color: var(--carta);
+}
+
+.testata__riga {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--passo);
+  padding-block: 1.25rem;
+}
+
+.marchio {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: var(--serif);
+}
+
+.marchio__sigla {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--campo);
+  letter-spacing: 0.02em;
+}
+
+.marchio__nome {
+  font-size: var(--testo-piccolo);
+  color: var(--inchiostro-tenue);
+}
+
+.menu__lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  font-size: var(--testo-piccolo);
+}
+
+.menu__lista a {
+  color: var(--inchiostro);
+  text-decoration: none;
+  padding-bottom: 0.125rem;
+  border-bottom: 2px solid transparent;
+}
+
+.menu__lista a:hover,
+.menu__lista a:focus-visible {
+  border-bottom-color: var(--campo);
+}
+
+/* ---------- 6. Apertura ------------------------------------------------
+   Nessuna immagine di sfondo. Il peso visivo è affidato al titolo, che
+   occupa la colonna di lettura e resta leggibile su ogni schermo. */
+.apertura {
+  background-color: var(--campo-scuro);
+  color: var(--carta);
+  padding-block: calc(var(--passo-sezione) * 1.25);
+}
+
+.apertura__testo { max-width: 44rem; }
+
+.apertura h1 {
+  font-size: var(--titolo-1);
+  color: var(--carta-alta);
+  text-wrap: balance;
+}
+
+.apertura__occhiello {
+  margin-top: var(--passo-doppio);
+  max-width: var(--misura);
+  color: #dcddd5;
+}
+
+.apertura__azione { margin-top: var(--passo-doppio); }
+
+/* ---------- 7. Sezioni di contenuto ------------------------------------ */
+.sezione { padding-block: var(--passo-sezione); }
+
+.sezione + .sezione {
+  border-top: 1px solid var(--filo);
+}
+
+.sezione h2 {
+  font-size: var(--titolo-2);
+  margin-bottom: var(--passo);
+}
+
+.sezione__introduzione {
+  color: var(--inchiostro-tenue);
+  margin-bottom: var(--passo-doppio);
+}
+
+.sezione--scura {
+  background-color: var(--campo);
+  color: var(--carta);
+  border-top: none;
+}
+
+.sezione--scura h2,
+.sezione--scura h3 { color: var(--carta-alta); }
+
+.sezione--scura .sezione__introduzione { color: #dfe3da; }
+
+/* Il pulsante è un collegamento, quindi mantiene la semantica del
+   collegamento e riceve soltanto un trattamento visivo. */
+.pulsante {
+  display: inline-block;
+  background-color: var(--terra);
+  color: var(--carta-alta);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 2px;
+}
+
+.pulsante:hover { background-color: #613d20; }
+
+.pulsante--compatto {
+  font-size: var(--testo-piccolo);
+  padding: 0.625rem 1.125rem;
+}
+
+.rimando {
+  font-size: var(--testo-piccolo);
+  color: var(--campo);
+}
+
+/* ---------- 8. Aree di impegno ----------------------------------------
+   Griglia a colonne fluide. Il numero di colonne dipende dallo spazio
+   disponibile e non da una soglia fissata a priori. */
+.impegni {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--passo-doppio);
+}
+
+.impegno {
+  padding-top: var(--passo);
+  border-top: 2px solid rgba(255, 255, 255, 0.35);
+}
+
+.impegno h3 {
+  font-size: var(--titolo-3);
+  margin-bottom: 0.5rem;
+}
+
+.impegno p { font-size: var(--testo-piccolo); }
+
+.impegno__misura {
+  margin-top: var(--passo);
+  font-weight: 600;
+  color: #f0e2c8;
+}
+
+/* ---------- 9. Indicatori ----------------------------------------------
+   Lista di definizioni disposta in griglia. L'etichetta precede la cifra
+   nell'ordine del documento, così la lettura sequenziale resta sensata. */
+.indicatori {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--passo-doppio);
+}
+
+.indicatore {
+  border-top: 1px solid var(--filo);
+  padding-top: 0.75rem;
+}
+
+.indicatore dt {
+  font-size: var(--testo-piccolo);
+  color: var(--inchiostro-tenue);
+}
+
+.indicatore dd {
+  margin: 0.25rem 0 0;
+  font-size: var(--testo-piccolo);
+}
+
+.indicatore__cifra {
+  display: block;
+  font-family: var(--serif);
+  font-size: var(--cifra);
+  line-height: 1.1;
+  color: var(--campo);
+}
+
+/* ---------- 10. Archivio dei report ------------------------------------ */
+.sezione--archivio { background-color: #eceae3; }
+
+.archivio {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: var(--passo-doppio);
+}
+
+.report {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--carta-alta);
+  border: 1px solid var(--filo);
+  border-top: 4px solid var(--campo);
+  padding: 1.5rem;
+}
+
+.report__anno {
+  font-family: var(--serif);
+  font-size: 1.75rem;
+  line-height: 1;
+  color: var(--campo);
+}
+
+.report__titolo {
+  font-size: var(--titolo-3);
+  margin-top: 0.375rem;
+}
+
+.report__sintesi {
+  font-size: var(--testo-piccolo);
+  margin-top: 0.75rem;
+}
+
+.report__dati {
+  font-size: 0.875rem;
+  color: var(--inchiostro-tenue);
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--filo);
+}
+
+/* margin-top automatico, così i pulsanti restano allineati sul fondo
+   anche quando le sintesi hanno lunghezze diverse. */
+.report__azioni {
+  margin-top: auto;
+  padding-top: var(--passo);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.625rem;
+}
+
+/* ---------- 11. Piede --------------------------------------------------- */
+.piede {
+  background-color: var(--campo-scuro);
+  color: #d3d6cd;
+  padding-block: var(--passo-sezione);
+  font-size: var(--testo-piccolo);
+}
+
+.piede__titolo {
+  font-size: var(--titolo-3);
+  color: var(--carta-alta);
+  margin-bottom: var(--passo);
+}
+
+/* ---------- 12. Adattamento agli schermi -------------------------------
+   Il foglio è scritto per la colonna singola. Le regole seguenti
+   introducono le variazioni necessarie sugli schermi più stretti e su
+   quelli molto ampi. */
+@media (max-width: 40rem) {
+  :root {
+    --titolo-1: 1.75rem;
+    --passo-sezione: 2.5rem;
+  }
+
+  .contenitore { padding-inline: 1.25rem; }
+
+  .testata__riga {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .menu__lista { gap: 1rem; }
+}
+
+@media (min-width: 75rem) {
+  :root { --titolo-1: 2.75rem; }
+}
+
+/* Resa in stampa. I collegamenti di navigazione non servono su carta,
+   mentre gli indirizzi dei documenti vengono esplicitati. */
+@media print {
+  .testata,
+  .apertura__azione { display: none; }
+
+  body {
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 11pt;
+  }
+
+  .apertura,
+  .sezione--scura,
+  .piede {
+    background-color: #ffffff;
+    color: #000000;
+  }
+
+  .report__azioni a[href]::after {
+    content: ' (' attr(href) ')';
+    font-size: 9pt;
+  }
+}
